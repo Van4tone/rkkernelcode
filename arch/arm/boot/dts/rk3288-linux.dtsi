@@ -171,3 +171,7 @@
 &efuse {
 	compatible = "rockchip,rk3288-secure-efuse";
 };
+
+&rockchip_suspend {
+	status = "okay";
+};
