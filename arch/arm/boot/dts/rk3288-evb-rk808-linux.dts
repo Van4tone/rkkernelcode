@@ -570,6 +570,14 @@
 	status = "okay";
 };
 
+&rockchip_suspend {
+	rockchip,pwm-regulator-config = <
+	(0
+	| PWM1_REGULATOR_EN
+	)
+	>;
+};
+
 &pwm1 {
 	status = "okay";
 };
