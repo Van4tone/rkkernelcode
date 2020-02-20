@@ -1,0 +1,223 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2018 Fuzhou Rockchip Electronics Co., Ltd
+ */
+
+/dts-v1/;
+#include <dt-bindings/display/drm_mipi_dsi.h>
+#include "rk1806-ficial-gate.dtsi"
+
+/ {
+	model = "Rockchip RK1808 EVB V10 Board";
+	compatible = "rockchip,rk1808-evb-v10", "rockchip,rk1808";
+
+	chosen {
+		bootargs = "loglevel=0 console=ttyFIQ0 root=PARTUUID=614e0000-0000 rootfstype=ext4 rootwait swiotlb=1 kpti=0 snd_aloop.index=7";
+	};
+
+	memory@200000 {
+		device_type = "memory";
+		reg = <0x0 0x00200000 0x0 0x0FE00000>;
+	};
+};
+
+/delete-node/ &adc_key;
+/delete-node/ &ramoops;
+/delete-node/ &ramoops_mem;
+
+/* only left 1.2GHz */
+&cpu0_opp_table {
+	/delete-node/ opp-408000000;
+	/delete-node/ opp-600000000;
+	/delete-node/ opp-816000000;
+	/delete-node/ opp-1008000000;
+};
+
+&display_subsystem {
+	status = "okay";
+};
+
+&emmc {
+	max-frequency = <200000000>;
+};
+
+&gmac {
+	status = "disabled";
+};
+
+&i2c1 {
+	status = "disabled";
+};
+
+&i2c4 {
+	status = "disabled";
+};
+
+&i2c3 {
+	status = "okay";
+
+	clock-frequency = <400000>;
+
+	pinctrl-0 = <&i2c3_xfer &cif_clkout_m0>;
+
+	ps5268: ps5268@48 {
+		status = "okay";
+		compatible = "primesensor,ps5268";
+		reg = <0x48>;
+		clocks = <&cru SCLK_CIF_OUT>;
+		clock-names = "xvclk";
+		avdd-supply = <&vcc2v8_dvp>;
+		dovdd-supply = <&vdd1v5_dvp>;
+		dvdd-supply = <&vcc1v8_dvp>;
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "default";
+		rockchip,camera-module-lens-name = "default";
+		port {
+			ucam_out: endpoint {
+				remote-endpoint = <&mipi_in_ucam>;
+				data-lanes = <1 2>;
+			};
+		};
+	};
+};
+
+&isp_mmu {
+	status = "okay";
+};
+
+&mipi_dphy {
+	status = "okay";
+};
+
+&mipi_dphy_rx {
+	status = "okay";
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi_in_ucam: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&ucam_out>;
+				data-lanes = <1 2>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			dphy_rx0_out: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&isp0_mipi_in>;
+			};
+		};
+	};
+};
+
+&rk_rga {
+	status =  "okay";
+};
+
+&rkisp1 {
+	status = "okay";
+
+	port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		isp0_mipi_in: endpoint@0 {
+			reg = <0>;
+			remote-endpoint = <&dphy_rx0_out>;
+		};
+	};
+};
+
+&rng {
+	status = "okay";
+};
+
+&rockchip_suspend {
+	status = "disabled";
+};
+
+&route_dsi {
+	status = "okay";
+};
+
+&saradc {
+	status = "disabled";
+};
+
+&sdio {
+	status = "disabled";
+};
+
+&sdmmc {
+	status = "disabled";
+};
+
+&tsadc {
+	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
+	rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
+	pinctrl-names = "gpio", "otpout";
+	pinctrl-0 = <&tsadc_otp_gpio>;
+	pinctrl-1 = <&tsadc_otp_out>;
+	status = "okay";
+};
+
+&uart4 {
+	status = "disabled";
+};
+
+&u2phy {
+	status = "disabled";
+};
+
+&u2phy_host {
+	status = "disabled";
+};
+
+&u2phy_otg {
+	status = "disabled";
+};
+
+&usb_host0_ehci {
+	status = "disabled";
+};
+
+&usb_host0_ohci {
+	status = "disabled";
+};
+
+&usbdrd3 {
+	status = "disabled";
+};
+
+&vdd_npu {
+	regulator-max-microvolt = <750000>;
+	regulator-init-microvolt = <750000>;
+};
+
+&vop_lite {
+	status = "okay";
+};
+
+&vopl_mmu {
+	status = "okay";
+};
+
+&vpu_mmu {
+	status = "okay";
+};
+
+&vpu_service {
+	status = "okay";
+};
